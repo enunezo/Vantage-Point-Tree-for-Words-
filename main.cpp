@@ -28,5 +28,20 @@ int main (){
 	vantagePointTree<string> ax ( readDocument("text.txt") );
 	ax.insert_();
 	ax.display();
-	return 1;
+
+/*	vector<int>d;
+	d.push_back(3);
+	d.push_back(7);
+	d.push_back(1);
+	d.push_back(9);
+	d.push_back(0);
+	d.push_back(2);
+	d.push_back(56);
+
+	ax.bubbleSort(d);
+	for (int k = 0; k<d.size(); k++){
+			cout<<d.at(k)<<'\t';
+		}
+	cout<<ax.getMedia (d);
+*/	return 1;
 }

@@ -5,15 +5,18 @@ using namespace std;
 template<typename T>
 struct Node {
 	T data;
+	double media;
 	Node<T> * sons[2];
 	Node (){
 		sons[0] = NULL;
 		sons[1] = NULL;
+		media = 0;
 	} 
 	Node ( T data_ ){
 		data = data_;
 		sons[0] = NULL;
 		sons[1] = NULL;
+		media = 0;
 	} 
 };
 
@@ -43,6 +46,18 @@ public:
 		return distance;
 	}
 
+	void bubbleSort( vector<int> & distances ){
+		int n = distances.size();
+		for (int i = 0; i < n; ++i){
+			for (int j = i+1; j < n; ++j){
+				if ( distances.at(i) > distances.at(j) ){
+					swap ( distances.at(i),distances.at(j) );
+				}
+			}
+		}
+	}
+
+
 	vector<int> distancesFromWord( vector<T> universe, string word ){
 		vector<int> distances;
 		for (int i = 0; i < universe.size(); ++i){
@@ -53,10 +68,18 @@ public:
 
 	double getMedia ( vector<int> distances ){
 		double media= 0;
-		for (int i = 0; i < distances.size(); ++i){
-			media+= distances.at(i);
+		bubbleSort (distances);
+		int tmp =  distances.size()/2;
+		if ( distances.size() == 0){
+			media = 0;
 		}
-		return media/distances.size();
+		else if ( distances.size() % 2 == 0 ){
+			media = ( distances.at( tmp )+ distances.at( tmp -1 ))/2;
+		}
+		else { 
+			media = distances.at( tmp );
+		}	
+		return media;
 	}
 	
 
@@ -68,10 +91,12 @@ public:
 		else if ( !(*current) ){
 			(*current) = new Node<T> ( universe.at( universe.size()-1 ) );
 			universe.pop_back();
-			double media = getMedia( distancesFromWord( universe, (*current)->data ) );
+			vector<int> tmpDistances =distancesFromWord( universe, (*current)->data ); 
+			double media_ = getMedia( tmpDistances );
+			(*current)->media = media_;
 			vector<T> sub_universe1, sub_universe2;
 			for (int i = 0; i < universe.size(); ++i){
-				if ( get_distance( universe.at(i),(*current)->data )>= media ){
+				if ( get_distance( universe.at(i),(*current)->data )>= media_ ){
 					sub_universe2.push_back( universe.at(i) );
 				}		
 				else {
@@ -90,6 +115,14 @@ public:
 
 	bool insert_ (){
 		return insert( universe, &head );
+	}
+
+	bool find (T data, Node<T> ** current){
+		if (data == (*current)->data ){
+			cout<<data<<" Encontrado!"<<endl;
+			return true;
+		}
+
 	}
 
 	void _display (Node<T>** current, int ident) {
